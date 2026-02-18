@@ -12,7 +12,8 @@ const Sidebar = () => {
   
   const navItems = [
     { path: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/upload", icon: Upload, label: "Upload Data" },
+    { path: "/connect", icon: Link2, label: "Connect Jira" },
+    { path: "/upload", icon: Upload, label: "Upload CSV" },
     { path: "/sprints", icon: BarChart3, label: "Sprint Analysis" },
   ];
   
