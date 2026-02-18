@@ -71,8 +71,27 @@ class TeamMember(BaseModel):
     completed_points: float
     completion_rate: float
 
+class JiraConnection(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    jira_url: str
+    email: str
+    api_token: str
+    is_active: bool = True
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class JiraConnectionRequest(BaseModel):
+    jira_url: str
+    email: str
+    api_token: str
+
+class JiraConnectionTest(BaseModel):
+    success: bool
+    message: str
+
 # Global storage for current dataset
 current_dataset = None
+current_jira_connection = None
 
 @api_router.get("/")
 async def root():
