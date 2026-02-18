@@ -1,0 +1,140 @@
+{
+  "typography": {
+    "font_family": {
+      "headings": "Public Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+      "body": "Public Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-2xl font-semibold tracking-tight",
+      "h2": "text-xl font-semibold tracking-tight",
+      "h3": "text-lg font-medium tracking-normal",
+      "p": "text-sm leading-normal",
+      "small": "text-xs font-medium text-muted-foreground"
+    }
+  },
+  "colors": {
+    "theme": "light",
+    "palette": {
+      "primary": {
+        "hex": "#0052CC",
+        "hsl": "216 100% 40%",
+        "usage": "Main actions, buttons, active states, links"
+      },
+      "secondary": {
+        "hex": "#F4F5F7",
+        "hsl": "220 14% 96%",
+        "usage": "Page backgrounds, sidebar backgrounds"
+      },
+      "background": {
+        "hex": "#FFFFFF",
+        "hsl": "0 0% 100%",
+        "usage": "Card backgrounds, modal backgrounds"
+      },
+      "foreground": {
+        "hex": "#172B4D",
+        "hsl": "218 54% 20%",
+        "usage": "Primary text, headings"
+      },
+      "muted": {
+        "hex": "#EBECF0",
+        "hsl": "220 13% 93%",
+        "usage": "Borders, dividers, disabled states"
+      },
+      "muted_foreground": {
+        "hex": "#5E6C84",
+        "hsl": "218 17% 44%",
+        "usage": "Secondary text, labels, icons"
+      },
+      "accent": {
+        "hex": "#DEEBFF",
+        "hsl": "218 100% 94%",
+        "usage": "Hover states, selected item backgrounds"
+      },
+      "success": {
+        "hex": "#36B37E",
+        "hsl": "154 54% 46%",
+        "usage": "Success badges, completion status"
+      },
+      "warning": {
+        "hex": "#FFAB00",
+        "hsl": "40 100% 50%",
+        "usage": "At-risk alerts, medium priority"
+      },
+      "error": {
+        "hex": "#FF5630",
+        "hsl": "14 100% 59%",
+        "usage": "Critical alerts, errors, delays"
+      }
+    }
+  },
+  "layout": {
+    "structure": "sidebar_layout",
+    "spacing": "dense",
+    "container": "max-w-[1600px] mx-auto p-6",
+    "grid_system": "bento_grid_dense",
+    "border_radius": "rounded-sm"
+  },
+  "components": {
+    "buttons": {
+      "style": "flat",
+      "radius": "rounded-[3px]",
+      "hover": "brightness-110",
+      "font_weight": "font-medium"
+    },
+    "cards": {
+      "style": "flat_border",
+      "radius": "rounded-[3px]",
+      "shadow": "shadow-sm",
+      "border": "border border-border"
+    },
+    "alerts": {
+      "style": "jira_flag",
+      "radius": "rounded-[3px]",
+      "shadow": "shadow-md",
+      "animation": "slide-in-right"
+    },
+    "charts": {
+      "library": "recharts",
+      "style": "minimalist",
+      "colors": ["#0052CC", "#36B37E", "#FFAB00", "#FF5630", "#6554C0"]
+    }
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-[0px_1px_2px_0px_rgba(9,30,66,0.25),0px_0px_1px_0px_rgba(9,30,66,0.31)]",
+    "gradients": "none",
+    "textures": "none",
+    "glassmorphism": "false"
+  },
+  "assets": {
+    "icons": "lucide-react",
+    "logo_strategy": "text_based_with_icon",
+    "image_urls": {
+      "user_avatar": {
+        "url": "https://images.pexels.com/photos/6146051/pexels-photo-6146051.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "alt": "User Profile",
+        "category": "avatar"
+      }
+    }
+  },
+  "instructions_to_main_agent": [
+    "INSTALL 'lucide-react' and 'recharts' immediately.",
+    "UPDATE 'tailwind.config.js' to use the HSL values provided in the colors section. REPLACING the default shadcn colors.",
+    "UPDATE 'index.css' root variables to match the Atlassian HSL palette.",
+    "SET font-family in 'index.css' to 'Public Sans' (import from Google Fonts: https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap).",
+    "CREATE a 'Sidebar' component that mimics the Jira project sidebar (collapsible, gray background).",
+    "BUILD the 'AlertBanner' component to look exactly like Jira flags (left colored border, shadow, floating or inline).",
+    "ENSURE all charts use the specified color palette.",
+    "USE 'dense' spacing for tables and lists (py-2 instead of py-4).",
+    "THEME: STRICTLY Light Mode. Do not implement Dark Mode toggle unless requested.",
+    "CSV UPLOAD: Create a distinct dropzone area with dashed border and clear instructions."
+  ],
+  "UNIVERSAL_GUIDELINES": [
+    "Do not use generic centered layouts. Use left-aligned structured hierarchies.",
+    "Use 'rounded-sm' (3px) for a professional Jira-like feel. Avoid 'rounded-xl'.",
+    "Animations should be fast (150ms) and crisp.",
+    "Never use gradients for backgrounds. Use flat colors.",
+    "All interactive elements must have 'data-testid'.",
+    "Use 'sonner' for toast notifications, styled as Jira flags."
+  ]
+}
