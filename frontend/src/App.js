@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-do
 import Dashboard from "@/components/Dashboard";
 import UploadData from "@/components/UploadData";
 import SprintAnalysis from "@/components/SprintAnalysis";
-import { LayoutDashboard, Upload, BarChart3 } from "lucide-react";
+import JiraConnect from "@/components/JiraConnect";
+import { LayoutDashboard, Upload, BarChart3, Link2 } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation();
