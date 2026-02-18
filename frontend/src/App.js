@@ -61,6 +61,7 @@ function App() {
           <div className="flex-1 min-h-screen bg-secondary">
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/connect" element={<JiraConnect />} />
               <Route path="/upload" element={<UploadData />} />
               <Route path="/sprints" element={<SprintAnalysis />} />
             </Routes>
