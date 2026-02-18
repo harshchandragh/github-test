@@ -13,6 +13,8 @@ from datetime import datetime, timezone
 import pandas as pd
 import io
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+from jira_client import JiraAPIClient
+from jira_service import JiraService
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
