@@ -97,6 +97,131 @@ current_jira_connection = None
 async def root():
     return {"message": "Jira Analytics API"}
 
+@api_router.post("/jira/test-connection", response_model=JiraConnectionTest)
+async def test_jira_connection(connection: JiraConnectionRequest):
+    """Test Jira connection credentials."""
+    try:
+        async with JiraAPIClient(
+            instance_url=connection.jira_url,
+            email=connection.email,
+            api_token=connection.api_token
+        ) as client:
+            is_valid = await client.test_connection()
+            
+            if is_valid:
+                return JiraConnectionTest(
+                    success=True,
+                    message="Connection successful! Credentials are valid."
+                )
+            else:
+                return JiraConnectionTest(
+                    success=False,
+                    message="Connection failed. Please check your credentials."
+                )
+    except Exception as e:
+        logging.error(f"Connection test error: {str(e)}")
+        return JiraConnectionTest(
+            success=False,
+            message=f"Connection error: {str(e)}"
+        )
+
+@api_router.post("/jira/connect")
+async def connect_jira(connection: JiraConnectionRequest):
+    """Save Jira connection and fetch data."""
+    global current_dataset, current_jira_connection
+    
+    try:
+        # Test connection first
+        async with JiraAPIClient(
+            instance_url=connection.jira_url,
+            email=connection.email,
+            api_token=connection.api_token
+        ) as client:
+            is_valid = await client.test_connection()
+            
+            if not is_valid:
+                raise HTTPException(status_code=401, detail="Invalid Jira credentials")
+            
+            # Save connection
+            current_jira_connection = {
+                "jira_url": connection.jira_url,
+                "email": connection.email,
+                "api_token": connection.api_token
+            }
+            
+            # Store in database
+            conn_doc = JiraConnection(**current_jira_connection).model_dump()
+            await db.jira_connections.insert_one(conn_doc)
+            
+            # Fetch data from Jira
+            jira_service = JiraService(client)
+            df = await jira_service.fetch_all_data()
+            
+            if df.empty:
+                raise HTTPException(status_code=404, detail="No data found in Jira instance")
+            
+            current_dataset = df
+            
+            return {
+                "success": True,
+                "message": "Connected to Jira successfully",
+                "total_issues": len(df),
+                "total_sprints": df['Assigned Sprint'].nunique() if 'Assigned Sprint' in df.columns else 0
+            }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error connecting to Jira: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error connecting to Jira: {str(e)}")
+
+@api_router.post("/jira/refresh")
+async def refresh_jira_data():
+    """Refresh data from connected Jira instance."""
+    global current_dataset, current_jira_connection
+    
+    if not current_jira_connection:
+        raise HTTPException(status_code=404, detail="No Jira connection found. Please connect first.")
+    
+    try:
+        async with JiraAPIClient(
+            instance_url=current_jira_connection["jira_url"],
+            email=current_jira_connection["email"],
+            api_token=current_jira_connection["api_token"]
+        ) as client:
+            jira_service = JiraService(client)
+            df = await jira_service.fetch_all_data()
+            
+            if df.empty:
+                raise HTTPException(status_code=404, detail="No data found in Jira")
+            
+            current_dataset = df
+            
+            return {
+                "success": True,
+                "message": "Data refreshed successfully",
+                "total_issues": len(df),
+                "total_sprints": df['Assigned Sprint'].nunique()
+            }
+    
+    except Exception as e:
+        logging.error(f"Error refreshing Jira data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error refreshing data: {str(e)}")
+
+@api_router.get("/jira/status")
+async def get_jira_connection_status():
+    """Get current Jira connection status."""
+    global current_jira_connection
+    
+    if current_jira_connection:
+        return {
+            "connected": True,
+            "jira_url": current_jira_connection["jira_url"],
+            "email": current_jira_connection["email"]
+        }
+    else:
+        return {"connected": False}
+
 @api_router.post("/upload-csv")
 async def upload_csv(file: UploadFile = File(...)):
     global current_dataset
