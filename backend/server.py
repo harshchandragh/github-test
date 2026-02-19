@@ -539,6 +539,50 @@ async def get_team_performance():
     
     return team_members[:10]  # Top 10
 
+@api_router.get("/delay-predictions")
+async def get_delay_predictions():
+    """
+    Get comprehensive delay predictions for all sprints
+    
+    Returns detailed analysis including:
+    - Delay probability
+    - Risk factors (progress, completion rate, blockers)
+    - Specific recommendations
+    - Early warnings
+    """
+    global current_dataset, delay_predictor
+    
+    if current_dataset is None:
+        raise HTTPException(status_code=404, detail="No data uploaded")
+    
+    try:
+        predictions = delay_predictor.analyze_all_sprints(current_dataset)
+        return predictions
+    except Exception as e:
+        logging.error(f"Error generating delay predictions: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating predictions: {str(e)}")
+
+@api_router.get("/delay-predictions/{sprint_name}")
+async def get_sprint_delay_prediction(sprint_name: str):
+    """
+    Get detailed delay prediction for a specific sprint
+    """
+    global current_dataset, delay_predictor
+    
+    if current_dataset is None:
+        raise HTTPException(status_code=404, detail="No data uploaded")
+    
+    try:
+        prediction = delay_predictor.predict_delay(current_dataset, sprint_name)
+        if prediction is None:
+            raise HTTPException(status_code=404, detail=f"Sprint '{sprint_name}' not found")
+        return prediction
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error generating prediction for {sprint_name}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
