@@ -94,6 +94,9 @@ class JiraConnectionTest(BaseModel):
 current_dataset = None
 current_jira_connection = None
 
+# Initialize delay predictor
+delay_predictor = DelayPredictor()
+
 @api_router.get("/")
 async def root():
     return {"message": "Jira Analytics API"}
