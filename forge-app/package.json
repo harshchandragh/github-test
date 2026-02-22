@@ -1,0 +1,20 @@
+{
+  "name": "jira-velocity-pro-forge",
+  "version": "1.0.0",
+  "description": "AI-powered sprint delay prediction that appears natively in Jira",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "forge build",
+    "deploy": "forge deploy",
+    "install": "forge install"
+  },
+  "dependencies": {
+    "@forge/api": "^3.0.0",
+    "@forge/resolver": "^1.5.0",
+    "@forge/react": "^10.0.0",
+    "@forge/bridge": "^3.0.0"
+  },
+  "devDependencies": {
+    "@forge/cli": "^6.0.0"
+  }
+}
